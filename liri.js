@@ -1,6 +1,7 @@
 require("dotenv").config();
 var fs = require('fs');
 var Spotify = require('node-spotify-api');
+var omdb = require('omdb');
 
 var spotify = new Spotify({
     id: process.env.SPOTIFY_ID,
@@ -54,6 +55,7 @@ function movie(product) {
     request(queryUrl, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
+            var movieinfo = "Title: " + info.Title + "Release Year: " + info.Year + "IMDB Rating: " + info.imdbRating
             console.log("Title: " + info.Title);
             console.log("Release Year: " + info.Year);
             console.log("IMDB Rating: " + info.imdbRating);
@@ -64,11 +66,19 @@ function movie(product) {
             console.log("Actors: " + info.Actors);
             fs.appendFile('log.txt', ("Title: " + info.Title + "\r\n" + "Release Year: " + info.Year + "\r\n" + "IMDB Rating: " + info.imdbRating + "\r\n" + "Rotten Tomatoes Rating: " + info.Ratings[1].Value + "\r\n" + "Country: " + info.Country + "\r\n" + "Language: " + info.Language + "\r\n" + "Plot: " + info.Plot + "\r\n" + "Actors: " + info.Actors + "\r\n"));
         }
+        console.log(movieinfo);
+
     });
 }
 
 switch (action) {
     case "spotify-this":
+        song(product);
+        break;
+}
+
+switch (action) {
+    case "movie-this":
         song(product);
         break;
 }
